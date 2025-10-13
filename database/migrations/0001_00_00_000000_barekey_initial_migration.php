@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mcgo_barekey_apikeys', function (Blueprint $table) {
+        Schema::create('barekey_apikeys', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
             $table->longText('token');

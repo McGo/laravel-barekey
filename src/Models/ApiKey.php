@@ -14,7 +14,7 @@ class ApiKey extends Model implements UserContract
     use Authenticatable;
     use HasFactory;
 
-    protected $table = 'mcgo_barekey_apikeys';
+    protected $table = 'barekey_apikeys';
     protected $fillable = [
         'uuid',
         'name',
