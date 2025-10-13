@@ -1,0 +1,34 @@
+{
+  "name": "mcgo/laravel-barekey",
+  "description": "Pure API key auth, nothing more, nothing less. ",
+  "authors": [
+    {
+      "name": "Mirko Haaser",
+      "email": "laravel-barekey@mcgo.dev"
+    }
+  ],
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "orchestra/testbench": "^8.0|^9.0|^10.0"
+  },
+  "require": {
+    "laravel/framework": "^10.0|^11.0|^12.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "McGo\\Barekey\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "McGo\\Barekey\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}

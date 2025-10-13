@@ -10,11 +10,10 @@
 
 - 🧩 **Stateless API key guard** – powered by `Auth::viaRequest()`
 - 🔐 **Secure hashing (SHA-256)** and prefix lookup for fast validation
-- 🎯 **Abilities / Scopes** with wildcard support (`invoices:*`)
+- 🎯 **Abilities / Scopes** with wildcard support (`invoices:*`) - even as route middleware
 - 🧠 **Enum-friendly design** for type-safe permission checks
-- ⚡ **No database overhead** beyond a single `api_keys` table
-- 🧱 **Works with Laravel Gates**, `Auth::check()`, and `auth:apikey`
-- 🛡️ Optional **rate limits**, `revoked_at`, and `expires_at` fields
+- ⚡ **No database overhead** beyond a single table for all your api keys
+- 🧱 **Works with Laravel Gates**, `Auth::check()`, and `auth:apikey` middleware
 
 ---
 
@@ -24,69 +23,49 @@
 composer require mcgo/laravel-barekey
 ```
 
-Then publish and run the migration:
+Then run the migration:
 
 ```bash
-php artisan vendor:publish --tag="barekey-migrations"
 php artisan migrate
 ```
 
-> You can optionally publish the config if you’d like to tweak the defaults:
->
-> ```bash
-> php artisan vendor:publish --tag="barekey-config"
-> ```
-
----
-
 ## ⚙️ Setup
 
-Register the guard in your `config/auth.php`:
+Register the guard in your `config/auth.php`. You can provide your custom Abilities Enum, see packages DefaultAbilities
+as example.
 
 ```php
 'guards' => [
-    'apikey' => [
+    'barekey' => [
         'driver' => 'apikey',
         'provider' => null,
+        // 'abilities' => YourAbilitiesEnum::class 
     ],
 ],
 ```
 
 Barekey automatically registers its guard in your `AuthServiceProvider`
-via `Auth::viaRequest('apikey', ...)`.
+via `Auth::viaRequest('barekey', ...)`.
 
 ---
 
-## 🧱 Model
-
-Barekey ships with a simple `ApiKey` model and migration:
-
-```php
-use Illuminate\Database\Eloquent\Model;
-
-class ApiKey extends Model
-{
-    protected $fillable = [
-        'name', 'prefix', 'hash', 'abilities',
-        'expires_at', 'revoked_at', 'rate_limit_per_min',
-    ];
-}
-```
+## 🔐 Keys
 
 To generate new keys:
 
 ```bash
-php artisan barekey:make "Backend Service" --abilities=invoices:read,reports:read
+php artisan barekey:make "My Service api key" --abilities=invoices:read,reports:read
 ```
 
 Output example:
 
 ```
-API Key (keep this secret!):
-bare_AbC123xy_KJHSDfksja9sd823JKjd9sdlks
 
-Name: Backend Service
-Abilities: invoices:read, reports:read
+API Key generated, please use it as the following header:
+Authorization: Bearer  593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
+Or as custom header:
+X-Barekey-Token:  593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
+
 ```
 
 ---
@@ -96,7 +75,7 @@ Abilities: invoices:read, reports:read
 Protect routes using the built-in middleware:
 
 ```php
-Route::middleware('auth:apikey')->group(function () {
+Route::middleware('auth:barekey')->group(function () {
     Route::get('/status', fn() => ['ok' => true]);
 });
 ```
@@ -104,7 +83,7 @@ Route::middleware('auth:apikey')->group(function () {
 You can also layer `can:` for ability-based checks:
 
 ```php
-Route::middleware(['auth:apikey', 'can:invoices:read'])
+Route::middleware(['auth:barekey', 'can:invoices:read'])
     ->get('/invoices', [InvoiceController::class, 'index']);
 ```
 
@@ -144,27 +123,19 @@ Gate::before(fn($user, $ability) => Ability::granted($user->abilities, $ability)
 ```php
 namespace App\Enums;
 
-enum Ability: string
+use McGo\Barekey\Contracts\AbilitiesEnumContract;
+
+enum Ability: string implements AbilitiesEnumContract
 {
     case InvoicesRead  = 'invoices:read';
     case InvoicesWrite = 'invoices:write';
     case ReportsRead   = 'reports:read';
     case Admin         = 'admin';
+    
+    // Implement the needed methods.
 }
 ```
 
----
-
-## 🧰 Rate Limiting (optional)
-
-Each key may have its own `rate_limit_per_min` value.
-Barekey automatically uses Laravel’s `RateLimiter` facade:
-
-```php
-if (RateLimiter::tooManyAttempts("apikey:{$key->id}", $key->rate_limit_per_min)) {
-    abort(429, 'Too many requests');
-}
-```
 
 ---
 
@@ -173,8 +144,6 @@ if (RateLimiter::tooManyAttempts("apikey:{$key->id}", $key->rate_limit_per_min))
 | Command | Description |
 |----------|--------------|
 | `php artisan barekey:make` | Create a new API key |
-| `php artisan barekey:list` | List all active API keys |
-| `php artisan barekey:revoke <id>` | Revoke a key immediately |
 
 ---
 
@@ -209,9 +178,11 @@ it('authenticates with valid API key', function () {
 
 ---
 
-## 💬 Punchline
+## 📋 Roadmap
 
-> 🪶 **Laravel Barekey** — Authenticate everything, without users.
+- Implement Commands to list and revoke key
+- Implement rate limiting per key
+- Add some events for created, revoked, used key and a rate limit that had hit 
 
 ---
 
