@@ -72,9 +72,9 @@ Output example:
 ```
 
 API Key generated, please use it as the following header:
-Authorization: Bearer  593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
+Authorization: Bearer 593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
 Or as custom header:
-X-Barekey-Token:  593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
+X-Barekey-Token: 593acec5-d9c2-43dd-9155-d93bad8c49e4:CJalcoa3ukYpkHa2ZfTWnRi0s4q8JPslSiqKbWXkls1suHMkJ8Ya6ggOKEBoEFje
 
 ```
 

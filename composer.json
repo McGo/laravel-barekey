@@ -26,6 +26,13 @@
       "McGo\\Barekey\\Tests\\": "tests/"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "McGo\\Barekey\\BarekeyServiceProvider"
+      ]
+    }
+  },
   "config": {
     "allow-plugins": {
       "php-http/discovery": true
