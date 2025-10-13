@@ -6,6 +6,7 @@ use Illuminate\Auth\RequestGuard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use McGo\Barekey\Commands\MakeApiKey;
 use McGo\Barekey\Enums\DefaultAbilities;
 use McGo\Barekey\Models\ApiKey;
 use McGo\Barekey\Observers\CreateApiKeyCalcualtedFields;
@@ -19,6 +20,7 @@ class BarekeyServiceProvider extends ServiceProvider
     }
     public function boot()
     {
+        $this->bootCommands();
         $this->bootAuth();
         $this->bootGate();
         $this->bootObserver();
@@ -67,5 +69,14 @@ class BarekeyServiceProvider extends ServiceProvider
     private function bootObserver()
     {
         ApiKey::observe(CreateApiKeyCalcualtedFields::class);
+    }
+
+    private function bootCommands()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeApiKey::class,
+            ]);
+        }
     }
 }
