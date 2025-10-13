@@ -10,7 +10,7 @@ class CreateApiKeyCalcualtedFields
     public function saving(ApiKey $apiKey)
     {
         $apiKey->uuid = $this->generateUniqueUUID();
-        $apiKey->token = Str::random(64);
+        $apiKey->token = $apiKey->token ?? Str::random(64);
     }
 
     private function generateUniqueUUID()

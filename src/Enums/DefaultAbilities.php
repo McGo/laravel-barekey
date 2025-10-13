@@ -26,19 +26,18 @@ enum DefaultAbilities: string implements AbilitiesEnumContract
     // Sample
     // case SampleCreate = 'sample:create';
 
-
     public static function values(): array
     {
         return array_map(fn(self $c) => $c->value, self::cases());
     }
 
 
-    public static function toString(self|string $ability): string
+    public static function toString(self|string|AbilitiesEnumContract $ability): string
     {
         return $ability instanceof self ? $ability->value : $ability;
     }
 
-    public static function granted(array $granted, self|string $needed): bool
+    public static function granted(array $granted, self|string|AbilitiesEnumContract $needed): bool
     {
         $neededStr = self::toString($needed);
 

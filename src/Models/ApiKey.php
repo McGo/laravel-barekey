@@ -57,7 +57,22 @@ class ApiKey extends Model implements UserContract
         if (empty($this->abilities)) {
             return false;
         }
-        return in_array($ability, (array)$this->abilities, true);
+        if (in_array($ability, (array)$this->abilities, true)) {
+            return true;
+        }
+
+        if (str_contains($ability, '*') && stristr($ability, ':')) {
+            $parts = explode(':', $ability);
+            foreach ($this->abilities as $candidate) {
+                if (stristr($candidate, ':')) {
+                    $candidate_parts = explode(':', $candidate);
+                    if ($parts[0] === $candidate_parts[0]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static function newFactory()

@@ -13,7 +13,7 @@ class ApiKeyFactory extends Factory
     public function definition()
     {
         return [
-            'email' => $this->faker->unique()->safeEmail,
+            'name' => $this->faker->name,
             'abilities' => []
         ];
     }
