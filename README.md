@@ -15,6 +15,16 @@
 - ⚡ **No database overhead** beyond a single table for all your api keys
 - 🧱 **Works with Laravel Gates**, `Auth::check()`, and `auth:apikey` middleware
 
+
+---
+
+## ⛓️‍ Compatibility
+
+| Package Version | Laravel Versions |
+|-----------------|------------------|
+| 1.x             | 10.x, 11.x, 12.x |
+
+
 ---
 
 ## 📦 Installation
