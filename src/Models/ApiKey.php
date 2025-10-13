@@ -17,9 +17,9 @@ class ApiKey extends Model implements UserContract
     protected $table = 'mcgo_barekey_apikeys';
     protected $fillable = [
         'uuid',
+        'name',
         'token',
         'abilities',
-        'email',
         'expires_at',
         'revoked_at',
         'last_used_at'
