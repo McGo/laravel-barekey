@@ -90,9 +90,5 @@ class BarekeyServiceProvider extends ServiceProvider
                 'abilities' => DefaultAbilities::class,
             ], config('auth.guards.barekey', [])),
         ]);
-
-        if (! app()->configurationIsCached()) {
-            $this->mergeConfigFrom(__DIR__.'/../config/sanctum.php', 'sanctum');
-        }
     }
 }
