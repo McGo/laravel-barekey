@@ -16,6 +16,7 @@ class BarekeyServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->registerConfig();
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
     public function boot()
@@ -77,6 +78,21 @@ class BarekeyServiceProvider extends ServiceProvider
             $this->commands([
                 MakeApiKey::class,
             ]);
+        }
+    }
+
+    private function registerConfig()
+    {
+        config([
+            'auth.guards.barekey' => array_merge([
+                'driver' => 'sanctum',
+                'provider' => null,
+                'abilities' => DefaultAbilities::class,
+            ], config('auth.guards.barekey', [])),
+        ]);
+
+        if (! app()->configurationIsCached()) {
+            $this->mergeConfigFrom(__DIR__.'/../config/sanctum.php', 'sanctum');
         }
     }
 }
